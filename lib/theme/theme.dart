@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const mycolor = MaterialColor(
   0xFF1F172E,
@@ -18,7 +19,7 @@ const mycolor = MaterialColor(
 
 final appTheme = ThemeData(
   useMaterial3: true,
-  scaffoldBackgroundColor:  const Color(0xffF3F4F6),
+  scaffoldBackgroundColor: const Color(0xffF3F4F6),
   primarySwatch: mycolor,
   dividerColor: Colors.grey,
   appBarTheme: const AppBarTheme(
@@ -31,29 +32,29 @@ final appTheme = ThemeData(
       fontWeight: FontWeight.w700,
     ),
   ),
-  
+  iconTheme: const IconThemeData(color: Color(0xff000000), size: 200,),
   listTileTheme: const ListTileThemeData(iconColor: Colors.white),
   textTheme: TextTheme(
-    bodyMedium: const TextStyle(
-      color: Colors.white,
+    bodyMedium: TextStyle(
+      color: Colors.blueGrey[800],
       fontWeight: FontWeight.w500,
       fontSize: 20,
     ),
-     titleLarge: const TextStyle(
-      color: Colors.white,
+    titleLarge: GoogleFonts.manrope(
+      color: const Color(0XFF000000),
       fontWeight: FontWeight.w500,
-      fontSize: 25,
     ),
-    labelLarge: const TextStyle(
-      color: Colors.white,
+    labelLarge: GoogleFonts.manrope(
+      color: const Color(0XFF000000),
       fontWeight: FontWeight.w500,
-      fontSize: 14,
+      fontSize: 24,
     ),
-    labelMedium: const TextStyle(
-        color: Colors.red,
-        fontWeight: FontWeight.w700,
-        fontSize: 20,
-        height: 1.5,
+
+    
+    labelMedium: GoogleFonts.manrope(
+      color: const Color(0XFF929292),
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
     ),
     labelSmall: TextStyle(
         color: Colors.white.withOpacity(0.6),

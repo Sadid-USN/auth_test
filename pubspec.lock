@@ -128,6 +128,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fpdart:
+    dependency: "direct main"
+    description:
+      name: fpdart
+      sha256: "7413acc5a6569a3fe8277928fc7487f3198530f0c4e635d0baef199ea36e8ee9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   get_it:
     dependency: "direct main"
     description:
@@ -358,7 +366,7 @@ packages:
     source: hosted
     version: "1.2.0"
   talker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: talker
       sha256: da18084857466bc8412be7a3e5c7cffd3b22c69f86faf6d478ebf45a42b85372

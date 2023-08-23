@@ -13,10 +13,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "Авторизация",
-          style: GoogleFonts.manrope(
-            color: const Color(0XFF000000),
-            fontWeight: FontWeight.w500,
-          ),
+          style: Theme.of(context).textTheme.titleLarge
         ),
       ),
       body: SizedBox(

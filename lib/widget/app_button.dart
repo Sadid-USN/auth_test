@@ -4,34 +4,46 @@ import 'package:google_fonts/google_fonts.dart';
 class AppButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
+  final Color backgroundColor;
+  final Color textColor;
+  final double padding; // Add this line
 
   const AppButton({
     Key? key,
     required this.title,
     required this.onTap,
+    required this.backgroundColor,
+    required this.textColor,
+    this.padding = 20, // Default padding
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:   const EdgeInsets.symmetric(horizontal: 20),
+      
+      padding: EdgeInsets.symmetric(horizontal: padding), // Use the padding provided
       margin: const EdgeInsets.only(bottom: 12),
       height: 65,
-      width: MediaQuery.sizeOf(context).width,
+      width: MediaQuery.of(context).size.width, // Use MediaQuery.of(context).size.width
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xff4631D2),
+          elevation: 0.0,
+          backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6.0),
           ),
         ),
-        child: Text(
-          title,
-          style:  GoogleFonts.manrope(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+        child: Align(
+          alignment: padding == 0 ? Alignment.centerLeft : Alignment.center,
+          child: Text(
+            title,
+            
+            style:  TextStyle(
+              color: textColor,
+              fontSize: 16,
+              fontWeight: padding == 0 ? FontWeight.w400 :FontWeight.w700,
+            ),
           ),
         ),
       ),
