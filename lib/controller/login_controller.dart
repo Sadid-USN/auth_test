@@ -1,8 +1,8 @@
 import 'package:auth_test/API/auth.dart';
+import 'package:auth_test/models/login_model.dart';
 import 'package:flutter/material.dart';
 
 class LoginController extends ChangeNotifier {
-
   var isLogin = false;
   final AuthAPI _authAPI;
 
@@ -10,8 +10,22 @@ class LoginController extends ChangeNotifier {
   // test@gmail.com
   // thisisrlycoolpass
   final phoneTextController = TextEditingController(text: "");
-  final passwordTextController =
-      TextEditingController(text: "");
+  final passwordTextController = TextEditingController(text: "");
+  final LoginModel profileData = LoginModel();
+
+ Future<LoginModel?> getProfile() async {
+    try {
+      final profileData = await _authAPI.getProfileData();
+      isLogin = true;
+      notifyListeners();
+      return profileData;
+    } catch (e) {
+      print('Login failed: $e');
+      isLogin = false;
+      notifyListeners();
+      return null; 
+    }
+  }
 
   Future<void> doLogin(BuildContext context) async {
     final email = phoneTextController.text;
@@ -20,6 +34,7 @@ class LoginController extends ChangeNotifier {
     try {
       final profileData = await _authAPI.login(email, password);
 
+       print("AccessToken ----> ${profileData.tokens!.accessToken}");
       isLogin = true;
       notifyListeners();
     } catch (e) {
@@ -54,12 +69,20 @@ class LoginController extends ChangeNotifier {
     return null;
   }
 
+  void navigateToPage(BuildContext context, Widget page) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
 
-   void navigateToPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) {
-        return page;
-      },
-    ));
+          final tween = Tween(begin: begin, end: end);
+          final offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
   }
 }
