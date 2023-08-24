@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:auth_test/API/auth.dart';
-import 'package:auth_test/controller/login_controller.dart';
+import 'package:auth_test/controller/auth_controller.dart';
 import 'package:auth_test/theme/theme.dart';
 import 'package:auth_test/view/login_page.dart';
 import 'package:dio/dio.dart';
@@ -30,11 +30,11 @@ Future<void> main() async {
         ),
       ),
     );
-    final authAPI = AuthImpl(dio);
+    final authAPI = AuthImpl(dio,);
 
     runApp(ChangeNotifierProvider(
         create: (context) {
-          return LoginController(authAPI);
+          return AuthController(authAPI);
         },
         child: const MyApp()));
   }, (error, stack) {

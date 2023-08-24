@@ -1,13 +1,14 @@
 import 'package:auth_test/controller/auth_controller.dart';
-import 'package:auth_test/view/profile_page.dart';
+import 'package:auth_test/view/login_page.dart';
+
 import 'package:auth_test/view/signup_page.dart';
 import 'package:auth_test/widget/app_button.dart';
 import 'package:auth_test/widget/app_text_filed.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginViewBody extends StatelessWidget {
-  const LoginViewBody({Key? key}) : super(key: key);
+class SignUpBody extends StatelessWidget {
+  const SignUpBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +24,22 @@ class LoginViewBody extends StatelessWidget {
               Consumer<AuthController>(
                 builder: (context, value, child) => AppTextField(
                   validator: controller.validateEmail,
-                  textEditingController: value.emailloginController,
+                  textEditingController: value.emailSignUpController,
                   hintText: 'Логин или почта',
+                ),
+              ),
+              Consumer<AuthController>(
+                builder: (context, value, child) => AppTextField(
+                  validator: controller.validateNickName,
+                  textEditingController: value.nickNameController,
+                  hintText: 'Никнейм',
+                ),
+              ),
+              Consumer<AuthController>(
+                builder: (context, value, child) => AppTextField(
+                  validator: controller.validatePhone,
+                  textEditingController: value.phoneController,
+                  hintText: 'Номер телефона',
                 ),
               ),
               const Padding(
@@ -37,7 +52,7 @@ class LoginViewBody extends StatelessWidget {
               Consumer<AuthController>(
                 builder: (context, value, child) => AppTextField(
                   validator: value.validatePassword,
-                  textEditingController: value.passwordLoginController,
+                  textEditingController: value.passwordSignUpController,
                   hintText: 'Пароль',
                 ),
               ),
@@ -45,28 +60,19 @@ class LoginViewBody extends StatelessWidget {
                 height: 40,
               ),
               Consumer<AuthController>(
-                builder: (context, controller, child) => AppButton(
-                  backgroundColor: const Color(0xff4631D2),
-                  textColor: Colors.white,
-                  title: "Войти",
-                  onTap: () async {
-                    if (formKey.currentState!.validate()) {
-                      await controller.doLogin(context);
-
-                      if (controller.isLogin && context.mounted) {
-                        controller.navigateToPage(context, const ProfilePage());
-                      }
-                    }
-                  },
-                ),
-              ),
-              Consumer<AuthController>(
                 builder: (context, value, child) => AppButton(
                   backgroundColor: const Color(0xff4631D2),
                   textColor: Colors.white,
                   title: "Зарегистрироваться",
-                  onTap: () {
-                    value.navigateToPage(context, const SignUpPage());
+                  onTap: () async{
+                          if (formKey.currentState!.validate()) {
+                      await controller.doSignUp(context);
+
+                      if (controller.isLogin && context.mounted) {
+                        controller.navigateToPage(context,  const LoginPage());
+                      }
+                    }
+                  
                   },
                 ),
               ),

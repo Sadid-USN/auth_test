@@ -1,10 +1,15 @@
 import 'package:auth_test/models/login_model.dart';
-import 'package:auth_test/models/profile_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class AuthAPI {
   Future<LoginModel> login(String email, String password);
-  Future<LoginModel> getProfileData();
+  Future<LoginModel> signUp(
+    String email,
+    String password,
+    String nickName,
+    String phone,
+  );
+  Future<LoginModel> getProfileData(String token);
 }
 
 class AuthImpl implements AuthAPI {
@@ -13,7 +18,8 @@ class AuthImpl implements AuthAPI {
   static const String _baseUrl = 'http://45.10.110.181:8080/api/v1';
 
   static const String _loginEndpoint = 'auth/login';
-  static const String _profileEndpoint = 'profile';
+  static const String _profileEndpoint = 'auth/login/profile';
+  static const String _signUpEndpoint = 'auth/registration/customer/new';
 
   AuthImpl(this._dio);
 
@@ -32,6 +38,19 @@ class AuthImpl implements AuthAPI {
   }
 
   @override
+  Future<LoginModel> signUp(
+      String email, String password, String nickName, String phone) async {
+    final requestData = {
+      'email': email,
+      'password': password,
+      'nickname': nickName,
+      "phone": phone
+    };
+    final request = _dio.post('$_baseUrl/$_signUpEndpoint', data: requestData);
+    return _handleRequest(request);
+  }
+
+  @override
   Future<LoginModel> login(String email, String password) async {
     final requestData = {'email': email, 'password': password};
     final request = _dio.post('$_baseUrl/$_loginEndpoint', data: requestData);
@@ -39,8 +58,10 @@ class AuthImpl implements AuthAPI {
   }
 
   @override
-  Future<LoginModel> getProfileData() async {
-    final request = _dio.get('$_baseUrl/$_profileEndpoint');
+  Future<LoginModel> getProfileData(String token) async {
+    final request = _dio.get('$_baseUrl/$_profileEndpoint',
+        options: Options(headers: {'Authorization': 'Bearer $token'}));
+
     return _handleRequest(request);
   }
 }
