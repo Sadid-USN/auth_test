@@ -10,10 +10,12 @@ abstract class AuthAPI {
     String phone,
   );
   Future<LoginModel> getProfileData(String token);
+  String logout();
 }
 
 class AuthImpl implements AuthAPI {
   final Dio _dio;
+  late String _token;
 
   static const String _baseUrl = 'http://45.10.110.181:8080/api/v1';
 
@@ -63,5 +65,10 @@ class AuthImpl implements AuthAPI {
         options: Options(headers: {'Authorization': 'Bearer $token'}));
 
     return _handleRequest(request);
+  }
+
+  @override
+  String logout() {
+   return _token = '';
   }
 }

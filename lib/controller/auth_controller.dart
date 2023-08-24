@@ -78,6 +78,17 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  void logout() {
+    token = null;
+
+    token = _authAPI.logout();
+    emailloginController.clear();
+    passwordLoginController.clear();
+
+    isLogin = false;
+    notifyListeners();
+  }
+
   Future<void> doSignUp(BuildContext context) async {
     final email = emailSignUpController.text;
     final password = passwordSignUpController.text;
@@ -85,7 +96,7 @@ class AuthController extends ChangeNotifier {
     final phone = phoneController.text;
 
     try {
-      signUpDta = await _authAPI.signUp(email, password,nickname , phone);
+      signUpDta = await _authAPI.signUp(email, password, nickname, phone);
       token = signUpDta.tokens!.accessToken;
       signUpDta = signUpDta;
       print("AccessToken ----> ${signUpDta.tokens!.accessToken}");
@@ -123,6 +134,7 @@ class AuthController extends ChangeNotifier {
     }
     return null;
   }
+
   String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return '* Пожалуйста заполните это поле';
@@ -150,6 +162,23 @@ class AuthController extends ChangeNotifier {
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
+
+          final tween = Tween(begin: begin, end: end);
+          final offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void navigateReplacement(BuildContext context, Widget page) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, -1.0); // Start from top
+          const end = Offset.zero; // End at the current position
 
           final tween = Tween(begin: begin, end: end);
           final offsetAnimation = animation.drive(tween);

@@ -1,4 +1,5 @@
 import 'package:auth_test/controller/auth_controller.dart';
+import 'package:auth_test/view/login_page.dart';
 import 'package:auth_test/widget/app_button.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -45,32 +46,35 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              AppButton(
-                padding: 0,
-                backgroundColor: Colors.white,
-                textColor: Colors.red,
-                title: "Выйти",
-                onTap: () {},
+              Consumer<AuthController>(
+                builder: (context, value, child) => AppButton(
+                  padding: 0,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.red,
+                  title: "Выйти",
+                  onTap: () {
+                    value.logout();
+                    value.navigateReplacement(context, const LoginPage());
+                  },
+                ),
               ),
             ],
           );
         },
       ),
-
-      bottomNavigationBar:  Consumer<AuthController>(
-          builder: (context, controller, child) => CurvedNavigationBar(
-            
-              animationDuration: const Duration(milliseconds: 250),
-              color:  Colors.white,
-              buttonBackgroundColor: Colors.white,
-              // height: 7.h,
-              index: controller.selectedIndex,
-              backgroundColor: Colors.white,
-              items: controller.navItems,
-              onTap: (index) {
-                controller.onTapBar(index);
-              }),
-        ),
+      bottomNavigationBar: Consumer<AuthController>(
+        builder: (context, controller, child) => CurvedNavigationBar(
+            animationDuration: const Duration(milliseconds: 250),
+            color: Colors.white,
+            buttonBackgroundColor: Colors.white,
+            // height: 7.h,
+            index: controller.selectedIndex,
+            backgroundColor: Colors.white,
+            items: controller.navItems,
+            onTap: (index) {
+              controller.onTapBar(index);
+            }),
+      ),
     );
   }
 }
