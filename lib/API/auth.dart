@@ -13,7 +13,10 @@ abstract class AuthAPI {
   String logout();
 }
 
+
 class AuthImpl implements AuthAPI {
+  
+   // ignore: prefer_final_fields
   final Dio _dio;
   late String _token;
 
@@ -69,6 +72,6 @@ class AuthImpl implements AuthAPI {
 
   @override
   String logout() {
-   return _token = '';
+    return _token = '';
   }
 }

@@ -20,6 +20,7 @@ Future<void> main() async {
     GetIt.I.registerSingleton(talker);
     final dio = Dio();
     dio.interceptors.add(
+      
       TalkerDioLogger(
         talker: talker,
         settings: const TalkerDioLoggerSettings(
