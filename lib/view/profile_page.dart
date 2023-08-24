@@ -53,8 +53,7 @@ class ProfilePage extends StatelessWidget {
                   textColor: Colors.red,
                   title: "Выйти",
                   onTap: () {
-                    value.logout();
-                    value.navigateReplacement(context, const LoginPage());
+                    value.logout(context);
                   },
                 ),
               ),

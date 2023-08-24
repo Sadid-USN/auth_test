@@ -32,13 +32,14 @@ final appTheme = ThemeData(
       fontWeight: FontWeight.w700,
     ),
   ),
+
   iconTheme: const IconThemeData(color: Color(0xff000000), size: 200,),
   listTileTheme: const ListTileThemeData(iconColor: Colors.white),
   textTheme: TextTheme(
-    bodyMedium: TextStyle(
-      color: Colors.blueGrey[800],
-      fontWeight: FontWeight.w500,
-      fontSize: 20,
+    bodyMedium:  const TextStyle(
+      color:  Colors.red,
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
     ),
     titleLarge: GoogleFonts.manrope(
       color: const Color(0XFF000000),

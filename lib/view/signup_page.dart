@@ -10,6 +10,7 @@ class SignUpPage extends StatelessWidget {
     var size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
+       
         title:
             Text("Авторизация", style: Theme.of(context).textTheme.titleLarge),
       ),

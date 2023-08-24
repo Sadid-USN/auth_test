@@ -1,8 +1,11 @@
 import 'package:auth_test/API/auth.dart';
 import 'package:auth_test/core/constant.dart';
 import 'package:auth_test/models/login_model.dart';
+import 'package:auth_test/view/login_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends ChangeNotifier {
   var isLogin = false;
@@ -56,35 +59,76 @@ class AuthController extends ChangeNotifier {
   Future<void> doLogin(BuildContext context) async {
     final email = emailloginController.text;
     final password = passwordLoginController.text;
-    final phone = phoneController.text;
 
     try {
       profileData = await _authAPI.login(email, password);
       token = profileData.tokens!.accessToken;
       profileData = profileData;
       print("AccessToken ----> ${profileData.tokens!.accessToken}");
-
+      saveEmailToSharedPreferences(email);
       isLogin = true;
       notifyListeners();
     } catch (e) {
-      print('Login failed: $e');
       isLogin = false;
       notifyListeners();
-
-      // Show a snackbar with the error message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Login failed: $e'),
-      ));
+      if (context.mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text(
+                'Ошибка входа!',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              content: const Text(
+                  'Пожалуйста, удостоверьтесь в правильности введенных вами данных.'),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the modal
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
-  void logout() {
-    token = null;
+  void logout(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: const Text('Выход из аккаунта'),
+          content:
+              const Text('Вы действительно хотите выйти из своего аккаунта?'),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Отмена'),
+            ),
+            CupertinoDialogAction(
+              onPressed: () {
+                navigateToPage(context, const LoginPage());
+                performLogout();
+              },
+              child: const Text('Выйти'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    token = _authAPI.logout();
+  void performLogout() {
+    token = null;
     emailloginController.clear();
     passwordLoginController.clear();
-
     isLogin = false;
     notifyListeners();
   }
@@ -100,20 +144,57 @@ class AuthController extends ChangeNotifier {
       token = signUpDta.tokens!.accessToken;
       signUpDta = signUpDta;
       print("AccessToken ----> ${signUpDta.tokens!.accessToken}");
-
+      saveEmailToSharedPreferences(email);
       isLogin = true;
       notifyListeners();
     } catch (e) {
-      print('Login failed: $e');
+      print('Sign-up failed: $e');
       isLogin = false;
       notifyListeners();
 
-      // Show a snackbar with the error message
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Login failed: $e'),
-      ));
+      if (context.mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text(
+                'Ошибка регистрации!',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              content: const Text('Произошла ошибка при регистрации'),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the modal
+                  },
+                  child: const Text('Ок'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
+
+  // SharedPreferences ====================
+
+  Future<void> saveEmailToSharedPreferences(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_email', email);
+  }
+
+  Future<void> clearEmailFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_email');
+  }
+
+  Future<String?> getEmailFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_email');
+  }
+
+  // VALIDATORS ========================
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -155,6 +236,8 @@ class AuthController extends ChangeNotifier {
     return null;
   }
 
+  // NAVIGATORS ========================
+
   void navigateToPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -182,6 +265,10 @@ class AuthController extends ChangeNotifier {
 
           final tween = Tween(begin: begin, end: end);
           final offsetAnimation = animation.drive(tween);
+          emailSignUpController.clear();
+          nickNameController.clear();
+          phoneController.clear();
+          passwordSignUpController.clear();
 
           return SlideTransition(position: offsetAnimation, child: child);
         },

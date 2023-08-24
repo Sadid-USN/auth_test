@@ -21,11 +21,20 @@ class LoginViewBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Consumer<AuthController>(
-                builder: (context, value, child) => AppTextField(
-                  validator: controller.validateEmail,
-                  textEditingController: value.emailloginController,
-                  hintText: 'Логин или почта',
-                ),
+                builder: (context, value, child) {
+                  final emailController = value.emailloginController;
+
+                  controller.getEmailFromSharedPreferences().then((email) {
+                    if (email != null) {
+                      emailController.text = email;
+                    }
+                  });
+                  return AppTextField(
+                    validator: controller.validateEmail,
+                    textEditingController: emailController,
+                    hintText: 'Логин или почта',
+                  );
+                },
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
