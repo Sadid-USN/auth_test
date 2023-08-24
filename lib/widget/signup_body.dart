@@ -69,7 +69,7 @@ class SignUpBody extends StatelessWidget {
                       await controller.doSignUp(context);
 
                       if (controller.isLogin && context.mounted) {
-                        controller.navigateToPage(context,  const LoginPage());
+                        controller.navigateReplacement(context,  const LoginPage());
                       }
                     }
                   
