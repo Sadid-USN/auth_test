@@ -36,6 +36,7 @@ class AuthController extends ChangeNotifier {
   final nickNameController = TextEditingController(text: "");
   final phoneController = TextEditingController(text: "");
   final passwordSignUpController = TextEditingController(text: "");
+
   LoginModel profileData = LoginModel();
   LoginModel signUpDta = LoginModel();
 
@@ -248,6 +249,10 @@ class AuthController extends ChangeNotifier {
 
           final tween = Tween(begin: begin, end: end);
           final offsetAnimation = animation.drive(tween);
+          emailSignUpController.clear();
+          nickNameController.clear();
+          phoneController.clear();
+          passwordSignUpController.clear();
 
           return SlideTransition(position: offsetAnimation, child: child);
         },
