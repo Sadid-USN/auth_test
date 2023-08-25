@@ -1,7 +1,5 @@
 import 'package:auth_test/controller/auth_controller.dart';
-import 'package:auth_test/view/login_page.dart';
-import 'package:auth_test/widget/app_button.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:auth_test/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +17,9 @@ class ProfilePage extends StatelessWidget {
         builder: (context, value, child) {
           final email = value.profileData.user?.email;
           final nickname = value.profileData.user?.nickname;
-          return Column(
+          return value.isLogin ?
+          
+           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -58,22 +58,10 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ],
-          );
+          ) : const Center(child: CircularProgressIndicator(),);
         },
       ),
-      bottomNavigationBar: Consumer<AuthController>(
-        builder: (context, controller, child) => CurvedNavigationBar(
-            animationDuration: const Duration(milliseconds: 250),
-            color: Colors.white,
-            buttonBackgroundColor: Colors.white,
-            // height: 7.h,
-            index: controller.selectedIndex,
-            backgroundColor: Colors.white,
-            items: controller.navItems,
-            onTap: (index) {
-              controller.onTapBar(index);
-            }),
-      ),
+      bottomNavigationBar: const CurvedNavnBar()
     );
   }
 }

@@ -1,7 +1,5 @@
 import 'package:auth_test/controller/auth_controller.dart';
 import 'package:auth_test/view/login_page.dart';
-
-import 'package:auth_test/view/signup_page.dart';
 import 'package:auth_test/widget/app_button.dart';
 import 'package:auth_test/widget/app_text_filed.dart';
 import 'package:flutter/material.dart';

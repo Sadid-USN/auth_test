@@ -115,7 +115,7 @@ class AuthController extends ChangeNotifier {
             ),
             CupertinoDialogAction(
               onPressed: () {
-                navigateToPage(context, const LoginPage());
+                navigateReplacement(context, const LoginPage());
                 performLogout();
               },
               child: const Text('Выйти'),
@@ -145,11 +145,10 @@ class AuthController extends ChangeNotifier {
       token = signUpDta.tokens!.accessToken;
       signUpDta = signUpDta;
       print("AccessToken ----> ${signUpDta.tokens!.accessToken}");
-      saveEmailToSharedPreferences(email);
+
       isLogin = true;
       notifyListeners();
     } catch (e) {
-      print('Sign-up failed: $e');
       isLogin = false;
       notifyListeners();
 
@@ -242,41 +241,53 @@ class AuthController extends ChangeNotifier {
   void navigateToPage(BuildContext context, Widget page) {
     Navigator.of(context).push(
       PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 400),
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 1.0);
+          const begin = Offset(1.0, 0.0);
           const end = Offset.zero;
 
           final tween = Tween(begin: begin, end: end);
           final offsetAnimation = animation.drive(tween);
+
+          // Clear controllers
           emailSignUpController.clear();
           nickNameController.clear();
           phoneController.clear();
           passwordSignUpController.clear();
 
-          return SlideTransition(position: offsetAnimation, child: child);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
         },
       ),
     );
   }
 
   void navigateReplacement(BuildContext context, Widget page) {
+    // Clear controllers here before navigation
+    emailSignUpController.clear();
+    nickNameController.clear();
+    phoneController.clear();
+    passwordSignUpController.clear();
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => page,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, -1.0); // Start from top
-          const end = Offset.zero; // End at the current position
+          const begin = 0.0;
+          const end = 1.0;
 
           final tween = Tween(begin: begin, end: end);
-          final offsetAnimation = animation.drive(tween);
-          emailSignUpController.clear();
-          nickNameController.clear();
-          phoneController.clear();
-          passwordSignUpController.clear();
+          final scaleAnimation = animation.drive(tween);
 
-          return SlideTransition(position: offsetAnimation, child: child);
+          return ScaleTransition(
+            scale: scaleAnimation,
+            child: child,
+          );
         },
+        transitionDuration: const Duration(milliseconds: 400),
       ),
     );
   }
